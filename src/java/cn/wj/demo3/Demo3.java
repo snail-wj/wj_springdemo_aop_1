@@ -12,7 +12,7 @@ import javax.annotation.Resource;
  * Created by WJ on 2017/10/19.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext.xml")
+@ContextConfiguration("classpath:applicationContext3.xml")
 public class Demo3 {
 
     @Resource(name = "customerDao")

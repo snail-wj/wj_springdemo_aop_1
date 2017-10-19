@@ -100,3 +100,52 @@
 	6. Weaving(织入)		-- 是指把增强应用到目标对象来创建新的代理对象的过程(例如jdk或是cglib来生成代理对象的过程)
 	7. Proxy（代理）		-- 一个类被AOP织入增强后，就产生一个结果代理类
 	8. Aspect(切面)			-- 是切入点和通知的结合，以后咱们自己来编写和配置的
+
+
+**技术分析之AspectJ的XML方式完成AOP的开发**
+
+	**技术分析之AspectJ的XML方式完成AOP的开发**
+
+    **切入点的表达式**
+	1. 再配置切入点的时候，需要定义表达式，重点的格式如下：execution(public * *(..))，具体展开如下：
+		* 切入点表达式的格式如下：
+			* execution([修饰符] 返回值类型 包名.类名.方法名(参数))
+
+		* 修饰符可以省略不写，不是必须要出现的。
+		* 返回值类型是不能省略不写的，根据你的方法来编写返回值。可以使用 * 代替。
+		* 包名例如：com.itheima.demo3.BookDaoImpl
+			* 首先com是不能省略不写的，但是可以使用 * 代替
+			* 中间的包名可以使用 * 号代替
+			* 如果想省略中间的包名可以使用 ..
+
+		* 类名也可以使用 * 号代替，也有类似的写法：*DaoImpl
+		* 方法也可以使用 * 号代替
+		* 参数如果是一个参数可以使用 * 号代替，如果想代表任意参数使用 ..
+
+
+**AOP的通知类型**
+
+	1. 前置通知
+		* 在目标类的方法执行之前执行。
+		* 配置文件信息：<aop:after method="before" pointcut-ref="myPointcut3"/>
+		* 应用：可以对方法的参数来做校验
+
+	2. 最终通知
+		* 在目标类的方法执行之后执行，如果程序出现了异常，最终通知也会执行。
+		* 在配置文件中编写具体的配置：<aop:after method="after" pointcut-ref="myPointcut3"/>
+		* 应用：例如像释放资源
+
+	3. 后置通知
+		* 方法正常执行后的通知。
+		* 在配置文件中编写具体的配置：<aop:after-returning method="afterReturning" pointcut-ref="myPointcut2"/>
+		* 应用：可以修改方法的返回值
+
+	4. 异常抛出通知
+		* 在抛出异常后通知
+		* 在配置文件中编写具体的配置：<aop:after-throwing method="afterThorwing" pointcut-ref="myPointcut3"/>
+		* 应用：包装异常的信息
+
+	5. 环绕通知
+		* 方法的执行前后执行。
+		* 在配置文件中编写具体的配置：<aop:around method="around" pointcut-ref="myPointcut2"/>
+		* 要注意：目标的方法默认不执行，需要使用ProceedingJoinPoint对来让目标对象的方法执行。

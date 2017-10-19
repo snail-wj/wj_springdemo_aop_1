@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"> <!-- bean definitions here -->
+
+
+    <!--配置客户的dao-->
+    <bean id="customerDao" class="cn.wj.demo3.CustomerDaoImpl"/>
+
+    <!-- 编写切面类-->
+    <bean id="myAspectXml" class="cn.wj.demo3.MyAspectXml"/>
+
+    <!-- 配置AOP -->
+    <!-- 其中要配置proxy-target-class的这个属性值，如果为true，一般是cglib来成为代理，如果不是，则是jdk-->
+    <aop:config proxy-target-class="true">
+        <aop:aspect ref="myAspectXml">
+            <!--
+                切入点的表达式
+                    1.execution() 固定的，不能不写
+                    2.public 可以省略不写
+                    3.void,返回值可以是*,标识任意的返回值，不能不写，语法是错误的
+                    4.可以使用*代替，不能不编写，简写凡是:*..*方法
+                    5.*DaoImpl
+                    6.方法
+                    7.方法的参数,..代表任意的参数
+            -->
+            <!--
+             <aop:before method="log" pointcut="execution(public void cn.wj.demo3.CustomerDaoImpl.save())"/>
+            -->
+            <!--
+                public可以不写
+                <aop:before method="log" pointcut="execution(void cn.wj.demo3.CustomerDaoImpl.save())"/>
+            -->
+            <!--
+                返回值可以是*,标识任意的返回值，不能不写，语法是错误的
+                <aop:before method="log" pointcut="execution(* cn.wj.demo3.CustomerDaoImpl.save())"/>
+            -->
+            <aop:before method="log" pointcut="execution(* cn.wj.*.*DaoImpl.save(..))"/>
+            <!--
+                包名可以使用*代替，不能不编写，简写凡是:*..*方法
+                <aop:before method="log" pointcut="execution(* cn.wj.*.CustomerDaoImpl.save())"/>
+            -->
+            <!--
+                包的简写方式,任意的包的结构
+                <aop:before method="log" pointcut="execution(* *..*.CustomerDaoImpl.save())"/>
+            -->
+            <!--
+                编写类的写法
+                <aop:before method="log" pointcut="execution(* *..*.*DaoImpl.save())"/>
+            -->
+            <!--
+                方法的编写
+                <aop:before method="log" pointcut="execution(* *..*.*DaoImpl.save*())"/>
+            -->
+            <!--
+                参数列表，出现一个*,表示一个参数，任意参数使用..
+            -->
+            <aop:before method="log" pointcut="execution(* *..*.DaoImpl.save*(..))"/>
+        </aop:aspect>
+    </aop:config>
+
+</beans>
